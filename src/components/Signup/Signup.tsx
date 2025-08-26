@@ -2,59 +2,92 @@ import { useForm, Controller } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { Input, Button, Card, Typography } from "antd";
 import { Link } from "react-router-dom";
-import { emailPattern, passwordPattern } from "../../constants";
+import { emailPattern, passwordPattern, usernamePattern } from "../../constants";
+import { showMessage } from "../../utils/notify";
+import { createUserWithEmailAndPassword, auth, setDoc, doc, db } from "../../lib/firebase";
+import ShowError from "../ShowError";
+import type { User } from "../../types";
 
-const { Title } = Typography;
-
-interface IFormInput {
+interface SignupFormProps {
     email: string;
+    username: string;
     password: string;
 }
 
 const Signup = () => {
-    const { control, handleSubmit, formState: { errors } } = useForm<IFormInput>();
-    const onSubmit: SubmitHandler<IFormInput> = (data) => {
-        console.log(data);
+    const { control, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<SignupFormProps>();
+    const { username, email, password } = errors;
+
+    const handleSignup: SubmitHandler<SignupFormProps> = async ({ email, password, username }) => {
+        try {
+            const { user } = await createUserWithEmailAndPassword(auth, email, password);
+
+            const userData = { id: user.uid, email, username, blockedUsers: [] } as User;
+
+            await setDoc(doc(db, "users", userData.id), userData);
+            reset();
+            showMessage({ type: "success", content: "Signup successful!" });
+        } catch (error: any) {
+            showMessage({ type: "error", content: error.message || "Signup failed!" });
+        }
     };
-    console.log(errors);
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <Card className="w-full max-w-md shadow-lg rounded-2xl">
                 <div className="text-center mb-6">
-                    <Title level={2} className="!mb-2">Create Account</Title>
+                    <Typography.Title level={2} className="!mb-2">Create Account</Typography.Title>
                     <p className="text-gray-500">Sign up to get started 🚀</p>
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                    <Controller
-                        name="email"
-                        control={control}
-                        rules={{
-                            required: "Email is required",
-                            pattern: emailPattern
-                        }}
-                        render={({ field }) => (
-                            <Input {...field} placeholder="Enter your email" className="!py-2" />
-                        )}
-                    />
-                    {errors.email && <p className="text-red-500 text-xs m-0">{errors.email.message}</p>}
-                    <Controller
-                        name="password"
-                        control={control}
-                        rules={{
-                            required: "Password is required",
-                            pattern: passwordPattern
-                        }}
-                        render={({ field }) => (
-                            <Input.Password {...field} placeholder="Enter your password" className="!py-2 mt-4 m-0" />
-                        )}
-                    />
-                    {errors.password && <p className="text-red-500 text-xs m-0">{errors.password.message}</p>}
+                <form onSubmit={handleSubmit(handleSignup)} className="!space-y-4">
+                    <div>
+                        <Controller
+                            name="username"
+                            control={control}
+                            rules={{
+                                required: "Username is required",
+                                pattern: usernamePattern
+                            }}
+                            render={({ field }) => (
+                                <Input {...field} placeholder="Username" className="!py-2" />
+                            )}
+                        />
+                        {username && <ShowError message={username?.message || ""} />}
+                    </div>
+                    <div>
+                        <Controller
+                            name="email"
+                            control={control}
+                            rules={{
+                                required: "Email is required",
+                                pattern: emailPattern
+                            }}
+                            render={({ field }) => (
+                                <Input {...field} placeholder="Enter your email" className="!py-2" />
+                            )}
+                        />
+                        {email && <ShowError message={email?.message || ""} />}
+                    </div>
+                    <div>
+                        <Controller
+                            name="password"
+                            control={control}
+                            rules={{
+                                required: "Password is required",
+                                pattern: passwordPattern
+                            }}
+                            render={({ field }) => (
+                                <Input.Password {...field} placeholder="Enter your password" className="!py-2" />
+                            )}
+                        />
+                        {password && <ShowError message={password?.message || ""} />}
+                    </div>
                     <Button
+                        loading={isSubmitting}
                         type="primary"
                         htmlType="submit"
-                        className="w-full !rounded-xl !py-5 mt-4 text-lg"
+                        className="w-full !rounded-xl !py-5 text-lg"
                     >
                         Sign Up
                     </Button>

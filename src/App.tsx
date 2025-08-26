@@ -1,8 +1,12 @@
 import AppRouter from "./config/AppRouter";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 const App = () => {
   return (
-    <AppRouter />
+    <Provider store={store}>
+      <AppRouter />
+    </Provider>
   )
 }
 
