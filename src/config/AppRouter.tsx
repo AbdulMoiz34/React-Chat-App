@@ -34,17 +34,19 @@ const AppRouter = () => {
                 }
 
             } catch (error: any) {
-                console.log(user);
+                
                 showMessage({ type: "error", content: error.message || "something went wrong." })
             }
-            
+
         })
 
         return () => unsub();
     }, []);
 
     if (isLoading) {
-        return <Spin className="!text-white" fullscreen={true} indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+        return <Spin className="!text-white" 
+        fullscreen={true} 
+        indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
     }
 
     return (
