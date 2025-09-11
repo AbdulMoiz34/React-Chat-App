@@ -1,0 +1,26 @@
+.addUser {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background-color: #03060990;
+    padding: 20px;
+    border-radius: 8px;
+    backdrop-filter: 5px;
+    box-shadow: 0px 0px 3px #ffffff7c;
+
+    .search {
+        display: flex;
+        gap: 12px;
+
+        input {
+            background-color: #fff;
+            padding: 6px 8px;
+            color: #000;
+            border: none;
+            outline: none;
+            border-radius: 4px;
+        }
+    }
+}

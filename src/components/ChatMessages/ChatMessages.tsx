@@ -3,6 +3,7 @@ import Middle from "./Middle";
 import Bottom from "./Bottom";
 
 const ChatMessages = () => {
+
     return (
         <div className="flex-2 border-[#3e86cea7] border-r border-l">
             <div className="w-full h-full">

@@ -1,12 +1,13 @@
 // users=> collection
 
-
+// Users collection
 type User = {
     id: string;
     blockedUsers: string[];
     email: string;
     username: string;
 }
+
 
 type Chats = {
     id: string;

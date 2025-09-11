@@ -7,6 +7,7 @@ import { showMessage } from "../../utils/notify";
 import { createUserWithEmailAndPassword, auth, setDoc, doc, db } from "../../lib/firebase";
 import ShowError from "../ShowError";
 import type { User } from "../../types";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 interface SignupFormProps {
     email: string;
@@ -20,11 +21,23 @@ const Signup = () => {
 
     const handleSignup: SubmitHandler<SignupFormProps> = async ({ email, password, username }) => {
         try {
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("username", "==", username));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                showMessage({ type: "error", content: "Username already taken." });
+                return;
+            }
+
             const { user } = await createUserWithEmailAndPassword(auth, email, password);
 
             const userData = { id: user.uid, email, username, blockedUsers: [] } as User;
 
-            await setDoc(doc(db, "users", userData.id), userData);
+            await setDoc(doc(db, "users", user.uid), userData);
+            await setDoc(doc(db, "userChats", user.uid), {
+                chats: []
+            });
             reset();
             showMessage({ type: "success", content: "Signup successful!" });
         } catch (error: any) {

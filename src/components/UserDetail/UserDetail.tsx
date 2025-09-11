@@ -1,12 +1,27 @@
 import Avatar from "../../assets/avatar.png";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { auth, signOut } from "../../lib/firebase";
+import { showMessage } from "../../utils/notify";
+import { useChatStore } from "../../lib/chatStore";
 
 const UserDetail = () => {
+
+    const { logout } = useChatStore();
+
+    const logoutHandler = async () => {
+        signOut(auth)
+            .then(() => showMessage({ type: "success", content: "Logout." }))
+            .catch(err => showMessage({ type: "error", content: err.message }));
+        logout();
+    }
+
+    const { user } = useChatStore();
+
     return (
         <div className="flex-1 py-4 flex flex-col gap-6">
             <div className="border-b border-[#3e86cea7] flex flex-col gap-2 justify-center items-center p-4">
                 <img src={Avatar} alt="" className="w-20 h-20 rounded-full border-2 border-blue-500" />
-                <p className="text-2xl">Ahmed</p>
+                <p className="text-2xl">{user?.username}</p>
                 <p className="text-xs text-gray-300">Lorem ipsum.</p>
             </div>
             <div className="flex flex-col gap-4 px-2">
@@ -29,7 +44,7 @@ const UserDetail = () => {
             </div>
             <div className="px-4 w-full flex flex-col gap-4">
                 <button className="text-center bg-[#f7626292] hover:bg-[#f76262b6] w-full py-1.5 rounded-md">Block User</button>
-                <button className="text-center bg-red-500 hover:bg-red-600 transition-all duration-300 w-full py-1.5 rounded-md">Log out</button>
+                <button onClick={logoutHandler} className="text-center bg-red-500 hover:bg-red-600 transition-all duration-300 w-full py-1.5 rounded-md">Log out</button>
             </div>
         </div>
     )
