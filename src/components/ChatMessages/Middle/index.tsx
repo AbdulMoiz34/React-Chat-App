@@ -1,13 +1,17 @@
 import { Scrollbar } from 'react-scrollbars-custom';
 import MessageBox from './MessageBox';
 import { useEffect, useRef, useState } from 'react';
-import type { Message } from '../../../types';
+import type { Chats } from '../../../types';
 import { useUserStore } from '../../../lib/userStore';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../../../lib/firebase';
+import { useChatStore } from '../../../lib/chatStore';
 
 const Middle = () => {
     const endRef = useRef<HTMLDivElement | null>(null);
-    const [messages, setMessages] = useState<[] | Message[]>([]);
+    const [chats, setChats] = useState<null | Chats>(null);
     const { currentUser } = useUserStore();
+    const { chatId } = useChatStore();
 
     useEffect(() => {
         endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -15,14 +19,21 @@ const Middle = () => {
 
 
     useEffect(() => {
-        console.log("run");
-    }, []);
+        const unsub = onSnapshot(doc(db, "chats", chatId as string), (res) => {
+            setChats(res.data() as Chats);
+        });
+
+        return () => {
+            unsub();
+        }
+
+    }, [chatId]);
 
     return (
         <Scrollbar>
             <div className="flex-10 py-3 px-2 overflow-auto flex flex-col gap-6 ">
-                {messages.map(msg => (
-                    <MessageBox message={msg.text} type={(msg.senderId == currentUser?.id) ? "mine" : ""} />
+                {chats?.messages.map(msg => (
+                    <MessageBox message={msg.text} createdAt={msg.createdAt} type={(msg.senderId == currentUser?.id) ? "mine" : ""} />
                 ))}
                 {/* <MessageBox message='Hello' />
                 <MessageBox message='Who are you?' type="mine" />

@@ -23,11 +23,10 @@ interface Message {
     chatId: string;
     senderId: string;
     text: string;
-    createdAt: Date;
+    createdAt: number;
 }
 
 interface Chats {
-    id: string;
     createdAt: Date;
     messages: Message[];
 }
