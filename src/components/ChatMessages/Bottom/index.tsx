@@ -1,6 +1,6 @@
 import TextArea from "antd/es/input/TextArea";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { AiOutlinePicture } from "react-icons/ai";
 import { FaCamera } from "react-icons/fa";
@@ -9,13 +9,14 @@ import { MdKeyboardVoice } from "react-icons/md";
 import { db } from "../../../lib/firebase";
 import { useChatStore } from "../../../lib/chatStore";
 import { useUserStore } from "../../../lib/userStore";
+import type { UserChats } from "../../../types";
 
 const Bottom = () => {
     const [text, setText] = useState<string>("");
     const [open, setOpen] = useState<boolean>(false);
 
     const { currentUser } = useUserStore();
-    const { chatId } = useChatStore();
+    const { chatId, user } = useChatStore();
 
     const handleEmoji = (emojiData: EmojiClickData) => {
         console.log(emojiData.emoji);
@@ -25,14 +26,40 @@ const Bottom = () => {
     const handleSend = async () => {
         if (text === "") return;
 
-        await updateDoc(doc(db, "chats", chatId as string), {
-            messages: arrayUnion({
-                senderId: currentUser?.id,
-                createdAt: Date.now(),
-                text,
-            })
-        });
+        try {
 
+            await updateDoc(doc(db, "chats", chatId as string), {
+                messages: arrayUnion({
+                    senderId: currentUser?.id,
+                    createdAt: Date.now(),
+                    text,
+                })
+            });
+
+            const userIDs = [currentUser?.id, user?.id];
+
+            userIDs.forEach(async (id) => {
+
+                const userChatsRef = doc(db, "userChats", id as string);
+                const userChatsSnapshot = await getDoc(userChatsRef);
+
+                if (userChatsSnapshot.exists()) {
+                    const userChats = userChatsSnapshot.data() as UserChats;
+                    const findIndex = userChats.chats.findIndex(chat => chat.chatId == chatId);
+                    userChats.chats[findIndex].lastMessage = text;
+                    userChats.chats[findIndex].isSeen = currentUser?.id == id ? true : false;
+                    userChats.chats[findIndex].updatedAt = Date.now();
+
+                    await updateDoc(userChatsRef, {
+                        chats: userChats.chats
+                    });
+                }
+            });
+
+            setText("");
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return (

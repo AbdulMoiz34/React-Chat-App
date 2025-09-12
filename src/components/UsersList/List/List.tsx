@@ -2,11 +2,11 @@ import ChatBox from "./ChatBox";
 import { Scrollbar } from 'react-scrollbars-custom';
 import "../../../index.css"
 
-const List = ({ chats }: any) => {
+const List = ({ chats, handleSelect }: any) => {
     return (
         <Scrollbar>
             <div className="overflow-auto">
-                {chats.map((chat:any) => <ChatBox key={chat.chatId} {...chat}  />)}
+                {chats.map((chat: any) => <ChatBox key={chat.chatId} {...chat} handleSelect={handleSelect} />)}
             </div>
         </Scrollbar>
     )

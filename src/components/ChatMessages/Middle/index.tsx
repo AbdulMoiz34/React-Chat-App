@@ -19,6 +19,7 @@ const Middle = () => {
 
 
     useEffect(() => {
+
         const unsub = onSnapshot(doc(db, "chats", chatId as string), (res) => {
             setChats(res.data() as Chats);
         });
@@ -32,16 +33,10 @@ const Middle = () => {
     return (
         <Scrollbar>
             <div className="flex-10 py-3 px-2 overflow-auto flex flex-col gap-6 ">
-                {chats?.messages.map(msg => (
-                    <MessageBox message={msg.text} createdAt={msg.createdAt} type={(msg.senderId == currentUser?.id) ? "mine" : ""} />
+                {chats?.messages.map((msg, idx) => (
+                    <MessageBox key={idx} message={msg.text} createdAt={msg.createdAt} type={(msg.senderId == currentUser?.id) ? "mine" : ""} />
                 ))}
-                {/* <MessageBox message='Hello' />
-                <MessageBox message='Who are you?' type="mine" />
-                <MessageBox message="I'm fine" />
-                <MessageBox message="I'm okay." />
-                <MessageBox message="I'm absolutely fine." />
-                <MessageBox message="ok." />
-                <MessageBox type="mine" message='end message Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates sed tempore magnam. Aliquid assumenda iure, iste exffffffffffffffffffffffff' /> */}
+
                 <div ref={endRef}></div>
             </div>
         </Scrollbar>

@@ -15,7 +15,6 @@ interface Chat {
 }
 
 interface UserChats {
-    id: string;
     chats: Chat[];
 }
 
