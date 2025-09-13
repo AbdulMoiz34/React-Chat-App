@@ -30,6 +30,7 @@ const Bottom = () => {
 
         try {
 
+            setText("");
             await updateDoc(doc(db, "chats", chatId as string), {
                 messages: arrayUnion({
                     senderId: currentUser?.id,
@@ -58,7 +59,6 @@ const Bottom = () => {
                 }
             });
 
-            setText("");
         } catch (err) {
             console.log(err);
         }
@@ -88,7 +88,7 @@ const Bottom = () => {
                         className={`${isUserBlocked && "!opacity-60"} disabled:!cursor-not-allowed hover:text-yellow-500 font-bold ${open ? "text-yellow-500 text-lg" : "text-yellow-300"}`}
                         onClick={() => setOpen(prev => !prev)}><FaFaceSmile />
                     </button>
-                    <EmojiPicker onEmojiClick={handleEmoji} open={open} className="!absolute bottom-10" />
+                    <EmojiPicker onEmojiClick={handleEmoji} open={open} className="!absolute bottom-10 z-10" />
                 </div>
                 <button
                     disabled={isUserBlocked}

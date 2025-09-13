@@ -11,7 +11,7 @@ const Top = () => {
             <div className="flex items-center gap-4">
                 <img src={Avatar} alt="avatar" className="w-10 h-10 object-cover rounded-full" />
                 <div>
-                    <p className="text-sm font-bold tracking-[0.14rem]">{user?.username}</p>
+                    <p className="text-sm font-bold tracking-[0.14rem]">{user?.username || "User"}</p>
                     <p className="text-xs text-gray-300">Lorem ipsum dolor sit amet consectetur.</p>
                 </div>
             </div>

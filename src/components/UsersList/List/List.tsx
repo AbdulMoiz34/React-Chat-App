@@ -1,8 +1,16 @@
 import ChatBox from "./ChatBox";
 import { Scrollbar } from 'react-scrollbars-custom';
 import "../../../index.css"
+import { Spin } from "antd";
 
-const List = ({ chats, handleSelect }: any) => {
+const List = ({ chats, handleSelect, loading }: any) => {
+
+    if (loading) {
+        return <div className="w-full h-full flex justify-center">
+           <Spin />
+        </div>
+    }
+    
     return (
         <Scrollbar>
             <div className="overflow-auto">

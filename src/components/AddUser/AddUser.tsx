@@ -7,6 +7,8 @@ import type { Chat, User, UserChats } from "../../types";
 import { useFormStatus } from "react-dom";
 import { useUserStore } from "../../lib/userStore";
 import { showMessage } from "../../utils/notify";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import { Tooltip } from "antd";
 
 
 function SubmitButton() {
@@ -125,8 +127,13 @@ const AddUser = ({ close }: AddUserProps) => {
     }
 
     return (
-        <div className="addUser">
+        <div className="addUser relative">
             <h3 className="text-center mb-4 font-medium text-lg">Add User</h3>
+            <button onClick={close} className="absolute right-5 top-2 text-lg hover:text-blue-300">
+                <Tooltip title="Do u wanna close it?">
+                    <IoIosCloseCircleOutline />
+                </Tooltip>
+            </button>
             <form action={searchHandle} className="search">
                 <input type="text" placeholder="Username" name="username" className="text-sm" />
                 <SubmitButton />

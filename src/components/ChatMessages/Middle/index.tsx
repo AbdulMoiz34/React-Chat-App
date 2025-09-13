@@ -15,7 +15,7 @@ const Middle = () => {
 
     useEffect(() => {
         endRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, []);
+    }, [chatId , chats]);
 
 
     useEffect(() => {

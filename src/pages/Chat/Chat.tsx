@@ -14,7 +14,7 @@ const Chat = () => {
                     {chatId && <UserDetail />}
                     {!chatId &&
                         <div className="flex-2 border-l border-[#3e86cea7] flex justify-center items-center">
-                            <span className="text-[#a9a9a9ad] font-medium w-3/6 text-center text-4xl">Select a chat to start a conversation</span>
+                            <span className="text-[#a9a9a9ad] font-medium w-3/5 text-center text-4xl">Select a chat to start a conversation</span>
                         </div>
                     }
                 </div>
