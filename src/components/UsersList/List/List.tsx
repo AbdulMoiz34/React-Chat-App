@@ -6,7 +6,7 @@ const List = ({ chats, handleSelect }: any) => {
     return (
         <Scrollbar>
             <div className="overflow-auto">
-                {chats.map((chat: any) => <ChatBox key={chat.chatId} {...chat} handleSelect={handleSelect} />)}
+                {chats?.map((chat: any) => <ChatBox key={chat.chatId} {...chat} handleSelect={handleSelect} />)}
             </div>
         </Scrollbar>
     )

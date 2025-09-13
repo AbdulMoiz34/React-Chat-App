@@ -16,7 +16,9 @@ const Bottom = () => {
     const [open, setOpen] = useState<boolean>(false);
 
     const { currentUser } = useUserStore();
-    const { chatId, user } = useChatStore();
+    const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } = useChatStore();
+
+    const isUserBlocked = isCurrentUserBlocked || isReceiverBlocked as boolean;
 
     const handleEmoji = (emojiData: EmojiClickData) => {
         console.log(emojiData.emoji);
@@ -65,28 +67,32 @@ const Bottom = () => {
     return (
         <div className="flex-1 flex gap-2 px-3 py-2 justify-center items-center border-[#3e86cea7] border-t pt-4">
             <div className="flex-1 flex gap-4 justify-center items-center">
-                <button><AiOutlinePicture /></button>
-                <button><FaCamera /></button>
-                <button><MdKeyboardVoice /></button>
+                <button disabled={isUserBlocked} className={`${isUserBlocked && "!opacity-60"}`}><AiOutlinePicture /></button>
+                <button disabled={isUserBlocked} className={`${isUserBlocked && "!opacity-60"}`}><FaCamera /></button>
+                <button disabled={isUserBlocked} className={`${isUserBlocked && "!opacity-60"}`}><MdKeyboardVoice /></button>
             </div>
             <div className="flex-8">
                 <TextArea
+                    disabled={isUserBlocked as boolean}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    placeholder="Send a message!"
-                    className="!outline-none px-2 py-1 rounded-sm !bg-[#0C212F] w-full !text-white placeholder:!text-gray-500"
+                    placeholder={`${isUserBlocked ? "You can't send a message" : "Send a message!"} `}
+                    className={`${isUserBlocked && "!opacity-60"} !outline-none px-2 py-1 rounded-sm !bg-[#0C212F] w-full !text-white placeholder:!text-gray-500`}
                     autoSize={{ minRows: 1, maxRows: 2 }}
                 />
             </div>
             <div className="flex-1 flex gap-4 justify-center items-center relative">
                 <div className="emoji relative top-0">
                     <button
-                        className={`hover:text-yellow-500 font-bold ${open ? "text-yellow-500 text-lg" : "text-yellow-300"}`}
+                        disabled={isUserBlocked}
+                        className={`${isUserBlocked && "!opacity-60"} disabled:!cursor-not-allowed hover:text-yellow-500 font-bold ${open ? "text-yellow-500 text-lg" : "text-yellow-300"}`}
                         onClick={() => setOpen(prev => !prev)}><FaFaceSmile />
                     </button>
                     <EmojiPicker onEmojiClick={handleEmoji} open={open} className="!absolute bottom-10" />
                 </div>
-                <button onClick={handleSend} className="px-3 py-1 rounded-sm text-sm border-none outline-none bg-blue-700 hover:bg-blue-800 transition-all duration-300">Send</button>
+                <button
+                    disabled={isUserBlocked}
+                    onClick={handleSend} className={`${isUserBlocked && "!opacity-60"} disabled:!cursor-not-allowed px-3 py-1 rounded-sm text-sm border-none outline-none bg-blue-700 hover:bg-blue-800 transition-all duration-300`}>Send</button>
             </div>
         </div>
     )

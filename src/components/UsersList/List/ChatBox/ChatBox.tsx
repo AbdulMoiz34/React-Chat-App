@@ -14,7 +14,7 @@ const ChatBox = ({ user, lastMessage, chatId, isSeen, handleSelect }: ChatBoxPro
                 <img src={Avatar} alt="User Image" className="rounded-full" />
             </div>
             <div>
-                <div className="username text-sm">{user.username}</div>
+                <div className="username text-sm">{user?.username}</div>
                 <div className="last-msg text-xs text-gray-300">{lastMessage}</div>
             </div>
         </div>

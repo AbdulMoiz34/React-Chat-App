@@ -17,7 +17,7 @@ const SearchBox = () => {
                     {open ? <BiMinus /> : <BiPlus />}
                 </button>
             </div>
-            {open && <AddUser />}
+            {open && <AddUser close={()=> setOpen(false)}/>}
         </>
     )
 }

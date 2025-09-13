@@ -1,12 +1,15 @@
 import Avatar from "../../assets/avatar.png";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { auth, signOut } from "../../lib/firebase";
+import { auth, db, signOut } from "../../lib/firebase";
 import { showMessage } from "../../utils/notify";
 import { useChatStore } from "../../lib/chatStore";
+import { useUserStore } from "../../lib/userStore";
+import { arrayUnion, doc, updateDoc, arrayRemove } from "firebase/firestore";
 
 const UserDetail = () => {
 
-    const { logout } = useChatStore();
+    const { logout, isCurrentUserBlocked, isReceiverBlocked, changeBlock, user } = useChatStore();
+    const { currentUser } = useUserStore();
 
     const logoutHandler = async () => {
         signOut(auth)
@@ -15,7 +18,13 @@ const UserDetail = () => {
         logout();
     }
 
-    const { user } = useChatStore();
+    const handleBlock = async () => {
+        const userRef = doc(db, "users", currentUser?.id as string);
+        await updateDoc(userRef, {
+            blockedUsers: isReceiverBlocked ? arrayRemove(user?.id) : arrayUnion(user?.id)
+        });
+        changeBlock();
+    }
 
     return (
         <div className="flex-1 py-4 flex flex-col gap-6">
@@ -43,7 +52,9 @@ const UserDetail = () => {
                 </div>
             </div>
             <div className="px-4 w-full flex flex-col gap-4">
-                <button className="text-center bg-[#f7626292] hover:bg-[#f76262b6] w-full py-1.5 rounded-md">Block User</button>
+                <button disabled={isCurrentUserBlocked as boolean} onClick={handleBlock} className="disabled:!cursor-not-allowed text-center bg-[#f7626292] hover:bg-[#f76262b6] w-full py-1.5 rounded-md">
+                    {isCurrentUserBlocked ? "You are blocked" : isReceiverBlocked ? "Unblock User" : "Block User"}
+                </button>
                 <button onClick={logoutHandler} className="text-center bg-red-500 hover:bg-red-600 transition-all duration-300 w-full py-1.5 rounded-md">Log out</button>
             </div>
         </div>

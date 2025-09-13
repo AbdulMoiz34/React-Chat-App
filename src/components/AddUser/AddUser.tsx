@@ -1,11 +1,12 @@
 import "./style.css";
 import Avatar from "../../assets/avatar.png";
-import { arrayUnion, collection, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useState } from "react";
-import type { User } from "../../types";
+import type { Chat, User, UserChats } from "../../types";
 import { useFormStatus } from "react-dom";
 import { useUserStore } from "../../lib/userStore";
+import { showMessage } from "../../utils/notify";
 
 
 function SubmitButton() {
@@ -21,20 +22,28 @@ function SubmitButton() {
     );
 }
 
-const AddUser = () => {
+interface AddUserProps {
+    close: () => void;
+}
+const AddUser = ({ close }: AddUserProps) => {
+
     const [user, setUser] = useState<null | User>(null);
     const [error, setError] = useState<string>("");
+    const [isUserExist, setIsUserExist] = useState<boolean>(false);
 
     const { currentUser } = useUserStore();
+
 
     const searchHandle = async (formData: FormData) => {
         const username = formData.get("username")?.toString().trim().toLowerCase();
         if (!username) return;
+
         if (currentUser?.username.toLowerCase() == username) {
             setError("Same User is not allowed.");
             setUser(null);
             return;
         }
+
         try {
             setError("");
             const usersRef = collection(db, "users");
@@ -51,13 +60,35 @@ const AddUser = () => {
         } catch (err) {
             setError(err as string);
             console.log(err);
+        } finally {
+            setIsUserExist(false);
         }
+    }
+
+    const isUserAlreadyExist = (chats: Chat[]) => {
+        for (let chat of chats) {
+            if (chat.receiverId == user?.id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     const addUserHandle = async () => {
         const chatsRef = collection(db, "chats");
-        const userChatsRef = collection(db, "userChats");
-        
+        const userChatsRef = collection(db, "userChats",);
+
+        const userChatsSnapshot = await getDoc(doc(db, "userChats", currentUser?.id as string));
+        const userChats = userChatsSnapshot.data() as UserChats;
+
+        const isUserExist = isUserAlreadyExist(userChats.chats);
+
+        if (isUserExist) {
+            setIsUserExist(true);
+            return showMessage({ type: "error", content: `${user?.username} is already exist in your chat.` });
+        }
+
         try {
             const newChatRef = doc(chatsRef);
 
@@ -71,7 +102,8 @@ const AddUser = () => {
                     chatId: newChatRef.id,
                     lastMessage: "",
                     receiverId: currentUser?.id,
-                    updatedAt: Date.now()
+                    updatedAt: Date.now(),
+                    isSeen: true
                 })
             });
 
@@ -80,10 +112,13 @@ const AddUser = () => {
                     chatId: newChatRef.id,
                     lastMessage: "",
                     receiverId: user?.id,
-                    updatedAt: Date.now()
+                    updatedAt: Date.now(),
+                    isSeen: true
                 })
             });
 
+            showMessage({ type: "success", content: `${user?.username} added in your chat.` });
+            close();
         } catch (err) {
             console.log(err);
         }
@@ -112,7 +147,7 @@ const AddUser = () => {
                             <p className="text-[11px]">{user.email}</p>
                         </div>
                     </div>
-                    <button onClick={addUserHandle} className="bg-blue-500 py-2 px-2 hover:bg-blue-600 text-xs rounded-sm">Add User</button>
+                    <button disabled={isUserExist} onClick={addUserHandle} className="bg-blue-500 py-2 px-2 hover:bg-blue-600 text-xs rounded-sm disabled:!cursor-not-allowed disabled:opacity-70">Add User</button>
                 </div>
             }
         </div>
