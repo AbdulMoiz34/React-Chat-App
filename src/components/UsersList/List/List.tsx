@@ -2,15 +2,16 @@ import ChatBox from "./ChatBox";
 import { Scrollbar } from 'react-scrollbars-custom';
 import "../../../index.css"
 import { Spin } from "antd";
+import { memo } from "react";
 
 const List = ({ chats, handleSelect, loading }: any) => {
 
     if (loading) {
         return <div className="w-full h-full flex justify-center">
-           <Spin />
+            <Spin />
         </div>
     }
-    
+
     return (
         <Scrollbar>
             <div className="overflow-auto">
@@ -20,4 +21,4 @@ const List = ({ chats, handleSelect, loading }: any) => {
     )
 }
 
-export default List;
+export default memo(List);

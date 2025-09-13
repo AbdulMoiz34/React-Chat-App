@@ -44,7 +44,7 @@ const UserDetail = () => {
             <Scrollbar>
                 <div className="border-b border-[#3e86cea7] flex flex-col gap-2 justify-center items-center p-4">
                     <img src={Avatar} alt="" className="w-20 h-20 rounded-full border-2 border-blue-500" />
-                    <p className="text-2xl">{user?.username || "User"}</p>
+                    <p className="text-2xl capitalize">{user?.username || "User"}</p>
                     <p className="text-xs text-gray-300">Lorem ipsum.</p>
                 </div>
                 <div className="flex flex-col gap-2 px-2 mt-4">

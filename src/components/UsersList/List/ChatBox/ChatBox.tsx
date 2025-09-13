@@ -1,4 +1,6 @@
+import { memo } from "react";
 import Avatar from "../../../../assets/avatar.png";
+import { useChatStore } from "../../../../lib/chatStore";
 import { useUserStore } from "../../../../lib/userStore";
 import type { Chat, User } from "../../../../types";
 
@@ -10,18 +12,21 @@ interface ChatBoxProps extends Chat {
 const ChatBox = ({ user, lastMessage, chatId, isSeen, handleSelect }: ChatBoxProps) => {
 
     const { currentUser } = useUserStore();
+    const { chatId: currentChatId } = useChatStore();
+
+    const isCurrentChat = chatId == currentChatId;
 
     return (
-        <div onClick={() => handleSelect(chatId, user)} className={`${!isSeen && "bg-[#0059b8be]"} flex gap-4 cursor-pointer items-center  py-3 px-3 border-b border-[#3e86cea7]  hover:bg-[#03060981]`}>
+        <div onClick={() => handleSelect(chatId, user)} className={`${!isSeen && "bg-[#0059b8be]"} flex gap-4 cursor-pointer items-center  py-3 px-3 border-b border-[#3e86cea7] hover:bg-[#03060981] ${isCurrentChat && "bg-[#03060981]"}`}>
             <div className="w-8 h-8">
-                <img src={Avatar} alt="User Image" className="rounded-full" />
+                <img src={Avatar} alt="User Image" className={`rounded-full ${isCurrentChat && "border-[#3e86cea7] border-1"}`} />
             </div>
             <div>
-                <div className="username text-sm">{user?.blockedUsers.includes(currentUser?.id as string) ? "User" : user?.username}</div>
+                <div className={`username text-sm capitalize ${isCurrentChat && "font-medium"}`}>{user?.blockedUsers.includes(currentUser?.id as string) ? "User" : user?.username}</div>
                 <div className="last-msg text-xs text-gray-300">{lastMessage}</div>
             </div>
         </div>
     );
 }
 
-export default ChatBox;
+export default memo(ChatBox);
