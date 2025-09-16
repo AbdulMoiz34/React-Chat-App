@@ -21,6 +21,8 @@ const UserInfo = () => {
         logout();
     }
 
+    const toggleItems = () => setOpen(prev => !prev);
+
     return (
         <div className="flex justify-between items-center px-2 relative">
             <div className="w-7 h-7 rounded-full">
@@ -29,15 +31,13 @@ const UserInfo = () => {
             <div className="font-bold capitalize">{currentUser?.username}</div>
             <div className="flex justify-center items-center gap-4 text-sm">
                 <BsThreeDots
-                    onClick={() => setOpen(prev => !prev)}
+                    onClick={toggleItems}
                     className={`cursor-pointer transition-transform duration-300 ${open ? "rotate-90 opacity-0" : "rotate-0 opacity-100"
-                        }`}
-                />
+                        }`} />
                 <RxCross1
-                    onClick={() => setOpen(prev => !prev)}
+                    onClick={toggleItems}
                     className={`cursor-pointer absolute transition-transform duration-300 ${open ? "rotate-0 opacity-100" : "rotate-90 opacity-0"
-                        }`}
-                />
+                        }`} />
             </div>
 
             {open && <div className="absolute z-10 text-center right-6 top-6 w-32 bg-[#2c2c2c80] backdrop-blur-md text-white text-sm rounded-lg shadow-xl border border-white/10 overflow-hidden">
@@ -49,7 +49,7 @@ const UserInfo = () => {
                 </Link>
                 <button
                     onClick={logoutHandler}
-                    className="block w-full px-4 py-2.5 hover:bg-white/10 transition-colors"
+                    className="block w-full px-4 py-2.5 hover:bg-white/10 hover:text-red-600  hover:!font-medium transition-colors"
                 >
                     Logout
                 </button>

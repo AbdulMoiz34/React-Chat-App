@@ -18,17 +18,35 @@ const ChatBox = ({ user, lastMessage, chatId, isSeen, handleSelect, isTyping }: 
     const isCurrentChat = chatId == currentChatId;
 
     return (
-        <div onClick={() => handleSelect(chatId, user)} className={`${!isSeen && "bg-[#0059b8be]"} relative flex gap-4 cursor-pointer items-center  py-3 px-3 border-b border-[#3e86cea7] hover:bg-[#03060981] ${isCurrentChat && "bg-[#03060981]"}`}>
+        <div
+            onClick={() => handleSelect(chatId, user)}
+            className={`relative flex items-center gap-4 cursor-pointer py-3 px-3 border-b border-[#3e86cea7] hover:bg-[#03060981] transition-colors ${!isSeen ? "bg-[#0059b8be]" : ""} ${isCurrentChat ? "bg-[#03060981]" : ""}`}>
             <div className="w-8 h-8">
-                <img src={Avatar} alt="User Image" className={`rounded-full ${isCurrentChat && "border-[#3e86cea7] border-1"}`} />
+                <img
+                    src={Avatar}
+                    alt="User"
+                    className={`rounded-full ${isCurrentChat ? "border border-[#3e86cea7]" : ""}`}
+                />
             </div>
-            <div>
-                <div className={`username text-sm capitalize ${isCurrentChat && "font-medium"}`}>{user?.blockedUsers.includes(currentUser?.id as string) ? "User" : user?.username}</div>
-                <div className="last-msg text-xs text-gray-300">{lastMessage}</div>
+
+            <div className="flex-1 min-w-0">
+                <div
+                    className={`username text-sm capitalize ${isCurrentChat && "font-medium"}`}>
+                    {user?.blockedUsers.includes(currentUser?.id as string) ? "User" : user?.username}
+                </div>
+                <div className="text-xs text-gray-300 truncate">
+                    {lastMessage}
+                </div>
             </div>
+
             {isTyping && (
-                <div className="absolute right-8 flex items-center">
-                    <Tooltip title={<span className="bg-[#03060981] text-blue-500 text-xs">Typing...</span>}>
+                <div className="absolute right-3 flex items-center">
+                    <Tooltip
+                        title={
+                            <span className="bg-[#03060981] text-blue-500 text-xs">
+                                Typing...
+                            </span>
+                        }>
                         <div className="flex space-x-1">
                             <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></span>
                             <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.2s]"></span>
@@ -37,8 +55,8 @@ const ChatBox = ({ user, lastMessage, chatId, isSeen, handleSelect, isTyping }: 
                     </Tooltip>
                 </div>
             )}
-
         </div>
+
     );
 }
 

@@ -102,11 +102,6 @@ const Bottom = () => {
 
     return (
         <div className="flex-1 flex gap-2 px-3 py-2 justify-center items-center border-[#3e86cea7] border-t pt-4">
-            <div className="flex-1 flex gap-4 justify-center items-center">
-                <button disabled={isUserBlocked} className={`${isUserBlocked && "!opacity-60"}`}><AiOutlinePicture /></button>
-                <button disabled={isUserBlocked} className={`${isUserBlocked && "!opacity-60"}`}><FaCamera /></button>
-                <button disabled={isUserBlocked} className={`${isUserBlocked && "!opacity-60"}`}><MdKeyboardVoice /></button>
-            </div>
             <div className="flex-8">
                 <TextArea
                     disabled={isUserBlocked as boolean}
@@ -118,7 +113,7 @@ const Bottom = () => {
                 />
             </div>
             <div className="flex-1 flex gap-4 justify-center items-center relative">
-                <div className="emoji relative top-0">
+                <div className="emoji relative top-0 flex items-center">
                     <button
                         disabled={isUserBlocked}
                         className={`${isUserBlocked && "!opacity-60"} disabled:!cursor-not-allowed hover:text-yellow-500 font-bold ${open ? "text-yellow-500 text-lg" : "text-yellow-300"}`}
