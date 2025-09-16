@@ -4,7 +4,6 @@ import { useChatStore } from "../../../../lib/chatStore";
 import { useUserStore } from "../../../../lib/userStore";
 import type { Chat, User } from "../../../../types";
 import { Tooltip } from "antd";
-import { TiMessageTyping } from "react-icons/ti";
 
 interface ChatBoxProps extends Chat {
     user: User;
