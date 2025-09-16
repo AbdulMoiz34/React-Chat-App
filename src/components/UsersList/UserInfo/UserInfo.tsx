@@ -1,24 +1,60 @@
 import { BsThreeDots } from "react-icons/bs";
 import Avatar from "../../../assets/avatar.png";
-import { CiVideoOn } from "react-icons/ci";
-import { FaExternalLinkAlt } from "react-icons/fa";
 import { useUserStore } from "../../../lib/userStore";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { RxCross1 } from "react-icons/rx";
+import { auth, signOut } from "../../../lib/firebase";
+import { showMessage } from "../../../utils/notify";
+import { useChatStore } from "../../../lib/chatStore";
 
 const UserInfo = () => {
     const { currentUser } = useUserStore();
+    const [open, setOpen] = useState(false);
+
+    const { logout } = useChatStore();
+
+    const logoutHandler = async () => {
+        signOut(auth)
+            .then(() => showMessage({ type: "success", content: "Logout." }))
+            .catch(err => showMessage({ type: "error", content: err.message }));
+        logout();
+    }
 
     return (
-        <div className="flex justify-between items-center px-2">
+        <div className="flex justify-between items-center px-2 relative">
             <div className="w-7 h-7 rounded-full">
                 <img src={Avatar} alt="User Avatar" className="object-cover w-full h-full border-1 border-solid border-blue-400 rounded-full" />
             </div>
             <div className="font-bold capitalize">{currentUser?.username}</div>
             <div className="flex justify-center items-center gap-4 text-sm">
-                <BsThreeDots className="cursor-pointer" />
-                <CiVideoOn className="cursor-pointer" />
-                <FaExternalLinkAlt size={12} className="text-gray-500 cursor-pointer" />
+                <BsThreeDots
+                    onClick={() => setOpen(prev => !prev)}
+                    className={`cursor-pointer transition-transform duration-300 ${open ? "rotate-90 opacity-0" : "rotate-0 opacity-100"
+                        }`}
+                />
+                <RxCross1
+                    onClick={() => setOpen(prev => !prev)}
+                    className={`cursor-pointer absolute transition-transform duration-300 ${open ? "rotate-0 opacity-100" : "rotate-90 opacity-0"
+                        }`}
+                />
             </div>
-        </div>
+
+            {open && <div className="absolute z-10 text-center right-6 top-6 w-32 bg-[#2c2c2c80] backdrop-blur-md text-white text-sm rounded-lg shadow-xl border border-white/10 overflow-hidden">
+                <Link
+                    to="/profile"
+                    className="block w-full px-4 py-2.5 hover:bg-white/10 transition-colors"
+                >
+                    Profile
+                </Link>
+                <button
+                    onClick={logoutHandler}
+                    className="block w-full px-4 py-2.5 hover:bg-white/10 transition-colors"
+                >
+                    Logout
+                </button>
+            </div>}
+        </div >
     )
 }
 
