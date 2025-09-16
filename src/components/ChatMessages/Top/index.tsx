@@ -12,7 +12,7 @@ const Top = () => {
                 <img src={Avatar} alt="avatar" className="w-10 h-10 object-cover rounded-full" />
                 <div>
                     <p className="text-sm font-bold tracking-[0.14rem] capitalize">{user?.username || "User"}</p>
-                    <p className="text-xs text-gray-300">Lorem ipsum dolor sit amet consectetur.</p>
+                    <p className="text-xs text-gray-300">Description.</p>
                 </div>
             </div>
             <div className="flex justify-center items-center gap-4">

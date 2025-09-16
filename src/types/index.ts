@@ -12,6 +12,7 @@ interface Chat {
     receiverId: string;
     updatedAt: number;
     isSeen: boolean;
+    isTyping: boolean;
 }
 
 interface UserChats {

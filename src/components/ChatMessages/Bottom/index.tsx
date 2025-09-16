@@ -1,7 +1,7 @@
 import TextArea from "antd/es/input/TextArea";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
 import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiOutlinePicture } from "react-icons/ai";
 import { FaCamera } from "react-icons/fa";
 import { FaFaceSmile } from "react-icons/fa6";
@@ -63,6 +63,42 @@ const Bottom = () => {
             console.log(err);
         }
     }
+
+    let timeoutId: ReturnType<typeof setTimeout>;
+    const typingRef = useRef<boolean>(false);
+
+    const setTyping = async (typing: boolean) => {
+        const userChatsRef = doc(db, "userChats", user?.id as string);
+
+        const userChatsSnapshot = await getDoc(userChatsRef);
+        if (userChatsSnapshot.exists()) {
+            const userChats = userChatsSnapshot.data() as UserChats;
+            const chatIdx = userChats?.chats?.findIndex(chat => chat.receiverId == currentUser?.id);
+            userChats.chats[chatIdx].isTyping = typing;
+            updateDoc(userChatsRef, {
+                chats: userChats.chats
+            });
+        }
+    }
+
+    useEffect(() => {
+        if (text && !typingRef.current) {
+            typingRef.current = true;
+            console.log("start");
+            setTyping(true);
+        }
+
+        if (typingRef.current) {
+            timeoutId = setTimeout(() => {
+                typingRef.current = false;
+                console.log("end");
+                setTyping(false);
+            }, 3000);
+        }
+
+        return () => clearTimeout(timeoutId);
+    }, [text]);
+
 
     return (
         <div className="flex-1 flex gap-2 px-3 py-2 justify-center items-center border-[#3e86cea7] border-t pt-4">

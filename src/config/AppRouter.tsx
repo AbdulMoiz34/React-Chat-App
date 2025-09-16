@@ -5,6 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import { useUserStore } from "../lib/userStore";
 import { Spin } from "antd";
+import Profile from "../components/Profile/Profile";
 
 const AppRouter = () => {
 
@@ -13,6 +14,7 @@ const AppRouter = () => {
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             fetchUserInfo(user?.uid as string);
+            console.log(user?.uid);
         })
     }, []);
 
@@ -30,6 +32,7 @@ const AppRouter = () => {
                 <Route path="signup" element={currentUser ? <Navigate to="/" /> : <Signup />} />
                 <Route path="login" element={currentUser ? <Navigate to="/" /> : <Login />} />
                 <Route path="/" element={currentUser ? <Chat /> : <Navigate to="login" />} />
+                <Route path="profile" element={<Profile />} />
             </Routes>
         </BrowserRouter>
     );

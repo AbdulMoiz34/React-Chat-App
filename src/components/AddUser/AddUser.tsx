@@ -93,6 +93,7 @@ const AddUser = ({ close }: AddUserProps) => {
 
         try {
             const newChatRef = doc(chatsRef);
+            close();
 
             await setDoc(newChatRef, {
                 createdAt: serverTimestamp(),
@@ -120,7 +121,6 @@ const AddUser = ({ close }: AddUserProps) => {
             });
 
             showMessage({ type: "success", content: `${user?.username} added in your chat.` });
-            close();
         } catch (err) {
             console.log(err);
         }
