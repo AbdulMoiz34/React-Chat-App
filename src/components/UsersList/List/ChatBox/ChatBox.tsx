@@ -27,11 +27,18 @@ const ChatBox = ({ user, lastMessage, chatId, isSeen, handleSelect, isTyping }: 
                 <div className={`username text-sm capitalize ${isCurrentChat && "font-medium"}`}>{user?.blockedUsers.includes(currentUser?.id as string) ? "User" : user?.username}</div>
                 <div className="last-msg text-xs text-gray-300">{lastMessage}</div>
             </div>
-            {isTyping && <div className="absolute right-8">
-                <Tooltip title={<span className="bg-[#03060981] text-blue-500 text-xs">Typing...</span>}>
-                    <TiMessageTyping size={20} className="text-[#0873e4]" />
-                </Tooltip>
-            </div>}
+            {isTyping && (
+                <div className="absolute right-8 flex items-center">
+                    <Tooltip title={<span className="bg-[#03060981] text-blue-500 text-xs">Typing...</span>}>
+                        <div className="flex space-x-1">
+                            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></span>
+                            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.2s]"></span>
+                            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.4s]"></span>
+                        </div>
+                    </Tooltip>
+                </div>
+            )}
+
         </div>
     );
 }
