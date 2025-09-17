@@ -1,5 +1,4 @@
-import Avatar from "../../assets/avatar.png";
-import {  db } from "../../lib/firebase";
+import { db } from "../../lib/firebase";
 import { showMessage } from "../../utils/notify";
 import { useChatStore } from "../../lib/chatStore";
 import { useUserStore } from "../../lib/userStore";
@@ -35,9 +34,11 @@ const UserDetail = () => {
         <div className="flex-1 py-4 flex flex-col gap-6 relative">
             <Scrollbar>
                 <div className="border-b border-[#3e86cea7] flex flex-col gap-2 justify-center items-center p-4">
-                    <img src={Avatar} alt="" className="w-20 h-20 rounded-full border-2 border-blue-500" />
+                    <img
+                        src={`https://ui-avatars.com/api/?name=${user?.username}&background=0D8ABC&color=fff&size=128`}
+                        alt="" className="w-20 h-20 rounded-full border-2 border-blue-500" />
                     <p className="text-2xl capitalize">{user?.username || "User"}</p>
-                    <p className="text-xs text-gray-300">Description.</p>
+                    <p className="text-xs text-gray-300 text-center">{user?.bio}</p>
                 </div>
                 <div className="px-4 flex-col gap-3 mt-4">
                     <button disabled={isCurrentUserBlocked as boolean || loading} onClick={handleBlock} className="disabled:!cursor-not-allowed text-center bg-[#f7626292] hover:bg-[#f76262b6] w-full py-1.5 text-sm rounded-md">
@@ -46,7 +47,6 @@ const UserDetail = () => {
                                 isReceiverBlocked ? "Blocked User" :
                                     "Block User"}
                     </button>
-                    {/* <button onClick={logoutHandler} className="text-center bg-red-500 hover:bg-red-600 transition-all duration-300 w-full py-1 text-sm rounded-md">Log out</button> */}
                 </div>
             </Scrollbar>
         </div>

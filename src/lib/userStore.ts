@@ -7,6 +7,8 @@ export interface UserState {
     currentUser: User | null;
     isLoading: boolean;
     fetchUserInfo: (uid: string) => Promise<void>;
+    changeUsername: (username: string) => void;
+    changeBio: (bio: string) => void;
 }
 
 const initialState = {
@@ -32,6 +34,20 @@ const useUserStore = create<UserState>((set) => ({
         } catch (err) {
             console.log(err);
             return set(initialState);
+        }
+    },
+    changeUsername: (username: string) => {
+        const currentUser = useUserStore.getState().currentUser;
+        if (currentUser) {
+            currentUser.username = username as string;
+            set({ currentUser: currentUser });
+        }
+    },
+    changeBio: (bio: string) => {
+        const currentUser = useUserStore.getState().currentUser;
+        if (currentUser) {
+            currentUser.bio = bio;
+            set({ currentUser: currentUser })
         }
     }
 }))

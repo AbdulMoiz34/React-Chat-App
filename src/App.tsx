@@ -1,8 +1,12 @@
+import { MobileWarning } from "./components";
 import AppRouter from "./config/AppRouter";
 
 const App = () => {
   return (
-    <AppRouter />
+    <>
+      <MobileWarning />
+      <AppRouter />
+    </>
   )
 }
 

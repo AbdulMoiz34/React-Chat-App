@@ -32,7 +32,7 @@ const AppRouter = () => {
                 <Route path="signup" element={currentUser ? <Navigate to="/" /> : <Signup />} />
                 <Route path="login" element={currentUser ? <Navigate to="/" /> : <Login />} />
                 <Route path="/" element={currentUser ? <Chat /> : <Navigate to="login" />} />
-                <Route path="profile" element={<Profile />} />
+                <Route path="profile" element={currentUser ? <Profile /> : <Navigate to="/login" />} />
             </Routes>
         </BrowserRouter>
     );

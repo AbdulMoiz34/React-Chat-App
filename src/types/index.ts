@@ -3,6 +3,7 @@ interface User {
     email: string;
     username: string;
     blockedUsers: string[];
+    bio?: string;
     // avatar: string;
 }
 

@@ -7,7 +7,7 @@ import { showMessage } from "../../utils/notify";
 import { createUserWithEmailAndPassword, auth, setDoc, doc, db } from "../../lib/firebase";
 import ShowError from "../ShowError";
 import type { User } from "../../types";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { isUsernameTaken } from "../../helpers";
 
 interface SignupFormProps {
     email: string;
@@ -21,11 +21,10 @@ const Signup = () => {
 
     const handleSignup: SubmitHandler<SignupFormProps> = async ({ email, password, username }) => {
         try {
-            const usersRef = collection(db, "users");
-            const q = query(usersRef, where("username", "==", username));
-            const querySnapshot = await getDocs(q);
 
-            if (!querySnapshot.empty) {
+            const isTaken = await isUsernameTaken(username)
+            if (isTaken) {
+                console.log(isTaken);
                 showMessage({ type: "error", content: "Username already taken." });
                 return;
             }

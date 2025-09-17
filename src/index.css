@@ -26,7 +26,9 @@ html {
     background-position: center;
     background-size: 100%;
 }
-
+.mine img {
+    display: none !important;
+}
 button {
     cursor: pointer;
 }

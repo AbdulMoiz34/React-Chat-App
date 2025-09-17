@@ -1,5 +1,4 @@
 import { memo } from "react";
-import Avatar from "../../../../assets/avatar.png";
 import { useChatStore } from "../../../../lib/chatStore";
 import { useUserStore } from "../../../../lib/userStore";
 import type { Chat, User } from "../../../../types";
@@ -23,7 +22,7 @@ const ChatBox = ({ user, lastMessage, chatId, isSeen, handleSelect, isTyping }: 
             className={`relative flex items-center gap-4 cursor-pointer py-3 px-3 border-b border-[#3e86cea7] hover:bg-[#03060981] transition-colors ${!isSeen ? "bg-[#0059b8be]" : ""} ${isCurrentChat ? "bg-[#03060981]" : ""}`}>
             <div className="w-8 h-8">
                 <img
-                    src={Avatar}
+                    src={`https://ui-avatars.com/api/?name=${user?.username}&background=0D8ABC&color=fff&size=128`}
                     alt="User"
                     className={`rounded-full ${isCurrentChat ? "border border-[#3e86cea7]" : ""}`}
                 />
