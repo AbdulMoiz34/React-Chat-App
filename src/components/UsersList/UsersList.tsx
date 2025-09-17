@@ -68,11 +68,21 @@ const UsersList = () => {
         changeChat(chatId, user);
     }
 
+    const [filteredChats, setFilteredChats] = useState<[] | any>([]);
+    let id: ReturnType<typeof setTimeout>;
+    const handleSearch = (val: string) => {
+        clearTimeout(id);
+        id = setTimeout(() => {
+            setFilteredChats(chats.filter((chat: any) => chat.user?.username.includes(val.toLowerCase())));
+            // setChats((prev: any) => prev.filter((chat: any) => chat.user?.username.includes(val.toLowerCase())));
+        }, 1000);
+    }
+
     return (
         <div className="flex-1 flex flex-col gap-4 py-2">
             <UserInfo />
-            <SearchBox />
-            <List chats={chats} handleSelect={handleSelect} loading={loading} />
+            <SearchBox handleSearch={handleSearch} />
+            <List chats={filteredChats.length ? filteredChats : chats} handleSelect={handleSelect} loading={loading} />
         </div>
     )
 }
