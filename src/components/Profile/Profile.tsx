@@ -98,7 +98,7 @@ const Profile: React.FC = () => {
                 </Tooltip>
                 <div className="flex flex-col items-center mb-7">
                     <img
-                        src="/src/assets/avatar.png"
+                        src={`https://ui-avatars.com/api/?name=${currentUser?.username}&background=0D8ABC&color=fff&size=128`}
                         alt="User Avatar"
                         className="w-28 h-28 rounded-full object-cover mb-4 border-4 border-blue-400 shadow-lg"
                     />
