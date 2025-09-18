@@ -13,6 +13,7 @@ const UsersList = () => {
 
     const [chats, setChats] = useState<[] | any>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [filteredChats, setFilteredChats] = useState<[] | any>([]);
 
     const { currentUser } = useUserStore();
     const { changeChat } = useChatStore();
@@ -68,13 +69,20 @@ const UsersList = () => {
         changeChat(chatId, user);
     }
 
-    const [filteredChats, setFilteredChats] = useState<[] | any>([]);
     let id: ReturnType<typeof setTimeout>;
     const handleSearch = (val: string) => {
+        val = val.trim().toLowerCase();
         clearTimeout(id);
         id = setTimeout(() => {
-            setFilteredChats(chats.filter((chat: any) => chat.user?.username.includes(val.toLowerCase())));
-            // setChats((prev: any) => prev.filter((chat: any) => chat.user?.username.includes(val.toLowerCase())));
+            const results = chats.filter((chat: any) => {
+                return chat.user?.username.includes(val);
+            });
+
+            setFilteredChats(results);
+
+            if (val.trim() && !results.length) {
+                showMessage({ type: "error", content: `${val} is not available in your chat.` });
+            }
         }, 1000);
     }
 

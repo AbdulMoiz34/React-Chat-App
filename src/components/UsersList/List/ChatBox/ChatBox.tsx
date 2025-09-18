@@ -16,14 +16,16 @@ const ChatBox = ({ user, lastMessage, chatId, isSeen, handleSelect, isTyping }: 
 
     const isCurrentChat = chatId == currentChatId;
 
+    const img = user?.avatar ?? `https://ui-avatars.com/api/?name=${user?.username}&background=0D8ABC&color=fff&size=128`;
+
     return (
         <div
             onClick={() => handleSelect(chatId, user)}
             className={`relative flex items-center gap-4 cursor-pointer py-3 px-3 border-b border-[#3e86cea7] hover:bg-[#03060981] transition-colors ${!isSeen ? "bg-[#0059b8be]" : ""} ${isCurrentChat ? "bg-[#03060981]" : ""}`}>
             <div className="w-8 h-8">
                 <img
-                    src={`https://ui-avatars.com/api/?name=${user?.username}&background=0D8ABC&color=fff&size=128`}
-                    alt="User"
+                    src={img}
+                    alt={user?.username}
                     className={`rounded-full ${isCurrentChat ? "border border-[#3e86cea7]" : ""}`}
                 />
             </div>

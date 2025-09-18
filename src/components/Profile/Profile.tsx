@@ -1,18 +1,19 @@
 
 import { Button, Tooltip } from "antd";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useUserStore } from "../../lib/userStore";
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db, signOut } from "../../lib/firebase";
 import { showMessage } from "../../utils/notify";
-import { isUsernameTaken } from "../../helpers";
+import { isUsernameTaken, uploadImgOnCloudinary } from "../../helpers";
 import { usernamePattern } from "../../constants";
 import { useChatStore } from "../../lib/chatStore";
+import { MdModeEditOutline } from "react-icons/md";
 
 const Profile: React.FC = () => {
 
-    const { currentUser, changeUsername, changeBio } = useUserStore();
+    const { currentUser, changeUsername, changeBio, changeAvatar } = useUserStore();
 
     const [profile, setProfile] = useState({
         name: currentUser?.username,
@@ -24,6 +25,10 @@ const Profile: React.FC = () => {
     const [form, setForm] = useState(profile);
     const [isChanged, setIsChanged] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const imgRef = useRef<null | HTMLInputElement>(null);
+    const [file, setFile] = useState<null | File | undefined>(null);
+    const [isUploading, setIsUploading] = useState<boolean>(false);
 
     const handleEdit = () => {
         setForm(profile);
@@ -40,8 +45,8 @@ const Profile: React.FC = () => {
         setIsChanged(changed);
     };
 
+    const userRef = doc(db, "users", currentUser?.id as string);
     const handleSave = async () => {
-        const userRef = doc(db, "users", currentUser?.id as string);
         const { name: username, bio } = form;
 
         if (!usernamePattern.value.test(username as string)) {
@@ -77,6 +82,23 @@ const Profile: React.FC = () => {
         }
     };
 
+    const saveFile = async () => {
+        try {
+            setIsUploading(true);
+            const url = await uploadImgOnCloudinary(file as File);
+            console.log(url);
+            await updateDoc(userRef, {
+                avatar: url
+            });
+            changeAvatar(url);
+            setFile(null);
+        } catch (err) {
+            const error = err as Error;
+            showMessage({ type: "error", content: error.message || "something went wrong." });
+        } finally {
+            setIsUploading(false);
+        }
+    }
 
     const { logout } = useChatStore();
 
@@ -87,21 +109,43 @@ const Profile: React.FC = () => {
         logout();
     }
 
+    const avatar = currentUser?.avatar ?? `https://ui-avatars.com/api/?name=${currentUser?.username}&background=0D8ABC&color=fff&size=128`;
+
     return (
         <div className="pb-8">
             <div className="relative max-w-lg mx-auto mt-12 bg-gray-50 border-1 border-gray-400 rounded-3xl shadow-2xl p-10 flex flex-col items-center">
                 <Tooltip
                     title={<span className="text-[10px] font-medium">Go to Home Page</span>}
-                    placement="bottom"
-                >
+                    placement="bottom">
                     <Link to="/" className="absolute left-4 bg-[#efefef] px-4 py-2 rounded-md text-xs hover:bg-gray-200 shadow hover:shadow-none hover:border border-[#0000003b] shadow-[#0000003b]">Back</ Link>
                 </Tooltip>
                 <div className="flex flex-col items-center mb-7">
-                    <img
-                        src={`https://ui-avatars.com/api/?name=${currentUser?.username}&background=0D8ABC&color=fff&size=128`}
-                        alt="User Avatar"
-                        className="w-28 h-28 rounded-full object-cover mb-4 border-4 border-blue-400 shadow-lg"
-                    />
+                    <div className="relative">
+                        <img src={avatar} alt="User Avatar"
+                            className="w-28 h-28 rounded-full object-cover  mb-4 border-4 border-blue-400 shadow-lg" />
+                        <div className="img-edit-box absolute bottom-5 right-0">
+                            <Button shape="circle" onClick={() => imgRef.current?.click()} disabled={file ? true : false}>
+                                <MdModeEditOutline color="blue" />
+                            </Button>
+                            <input accept="image/*" type="file"
+                                className="hidden" ref={imgRef}
+                                onChange={(e) => setFile(e?.target?.files?.[0])} />
+                            {file && (
+                                <div className="btns text-xs absolute flex gap-4 bottom-0 left-12">
+                                    <Button
+                                        onClick={() => setFile(null)} disabled={isUploading}
+                                        className="!border-none !bg-blue-50 hover:!bg-red-50 !text-black !text-xs rounded-md !shadow disabled:opacity-70 disabled:!cursor-not-allowed">
+                                        Cancel
+                                    </Button>
+                                    <Button loading={isUploading} disabled={isUploading}
+                                        onClick={saveFile}
+                                        className="!border-none !bg-blue-50 hover:!bg-green-50 !text-black !text-xs rounded-md !shadow disabled:opacity-70 disabled:!cursor-not-allowed">
+                                        Save
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                     {editing ? (
                         <>
                             <input

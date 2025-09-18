@@ -9,6 +9,7 @@ export interface UserState {
     fetchUserInfo: (uid: string) => Promise<void>;
     changeUsername: (username: string) => void;
     changeBio: (bio: string) => void;
+    changeAvatar: (avatar: string) => void;
 }
 
 const initialState = {
@@ -49,6 +50,13 @@ const useUserStore = create<UserState>((set) => ({
             currentUser.bio = bio;
             set({ currentUser: currentUser })
         }
+    }, changeAvatar: (avatar: string) => {
+        const currentUser = useUserStore.getState().currentUser;
+        if (currentUser) {
+            currentUser.avatar = avatar;
+            set({ currentUser: currentUser });
+        }
+
     }
 }))
 

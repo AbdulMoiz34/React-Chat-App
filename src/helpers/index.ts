@@ -1,5 +1,6 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../lib/firebase";
+import axios from "axios";
 
 const isUsernameTaken = async (username: string): Promise<boolean> => {
     const usersRef = collection(db, "users");
@@ -15,5 +16,21 @@ const isUsernameTaken = async (username: string): Promise<boolean> => {
     }
 };
 
+const uploadImgOnCloudinary = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "chat_app120301831938");
 
-export { isUsernameTaken };
+    try {
+        const res = await axios.post(
+            "https://api.cloudinary.com/v1_1/moiz34/image/upload",
+            formData
+        );
+
+        return res.data.secure_url;
+    } catch (err) {
+        throw new Error("something went wrong");
+    }
+}
+
+export { isUsernameTaken, uploadImgOnCloudinary };

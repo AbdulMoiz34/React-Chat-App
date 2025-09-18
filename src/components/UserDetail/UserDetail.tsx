@@ -29,14 +29,16 @@ const UserDetail = () => {
         }
     }
 
+    const img = user?.avatar ?? `https://ui-avatars.com/api/?name=${user?.username}&background=0D8ABC&color=fff&size=128`;
+
     return (
 
         <div className="flex-1 py-4 flex flex-col gap-6 relative">
             <Scrollbar>
                 <div className="border-b border-[#3e86cea7] flex flex-col gap-2 justify-center items-center p-4">
                     <img
-                        src={`https://ui-avatars.com/api/?name=${user?.username}&background=0D8ABC&color=fff&size=128`}
-                        alt="" className="w-20 h-20 rounded-full border-2 border-blue-500" />
+                        src={img}
+                        alt={currentUser?.username} className="w-20 h-20 rounded-full border-2 border-blue-500" />
                     <p className="text-2xl capitalize">{user?.username || "User"}</p>
                     <p className="text-xs text-gray-300 text-center">{user?.bio}</p>
                 </div>

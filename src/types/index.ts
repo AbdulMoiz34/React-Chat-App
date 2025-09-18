@@ -4,7 +4,7 @@ interface User {
     username: string;
     blockedUsers: string[];
     bio?: string;
-    // avatar: string;
+    avatar?: string;
 }
 
 interface Chat {

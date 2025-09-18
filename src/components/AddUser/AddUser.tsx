@@ -1,5 +1,4 @@
 import "./style.css";
-import Avatar from "../../assets/avatar.png";
 import { arrayUnion, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useState } from "react";
@@ -126,6 +125,7 @@ const AddUser = ({ close }: AddUserProps) => {
         }
     }
 
+    const img = user?.avatar ?? `https://ui-avatars.com/api/?name=${user?.username}&background=0D8ABC&color=fff&size=128`;
     return (
         <div className="addUser relative">
             <h3 className="text-center mb-4 font-medium text-lg">Add User</h3>
@@ -148,7 +148,7 @@ const AddUser = ({ close }: AddUserProps) => {
                 user &&
                 <div className="user flex justify-between mt-8 items-center">
                     <div className="details flex gap-6 items-center">
-                        <img src={Avatar} alt="User Image" className="w-11 h-11 object-cover rounded-full" />
+                        <img src={img} alt={user?.username} className="w-11 h-11 object-cover rounded-full" />
                         <div className="flex flex-col items-center">
                             <p className="username text-sm font-bold capitalize">{user.username}</p>
                             <p className="text-[11px]">{user.email}</p>
