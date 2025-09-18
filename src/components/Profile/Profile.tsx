@@ -86,7 +86,6 @@ const Profile: React.FC = () => {
         try {
             setIsUploading(true);
             const url = await uploadImgOnCloudinary(file as File);
-            console.log(url);
             await updateDoc(userRef, {
                 avatar: url
             });

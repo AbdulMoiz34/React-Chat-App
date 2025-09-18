@@ -38,7 +38,7 @@ const UserDetail = () => {
                 <div className="border-b border-[#3e86cea7] flex flex-col gap-2 justify-center items-center p-4">
                     <img
                         src={img}
-                        alt={currentUser?.username} className="w-20 h-20 rounded-full border-2 border-blue-500" />
+                        alt={currentUser?.username} className="object-cover w-20 h-20 rounded-md border-[1.5px] border-blue-400" />
                     <p className="text-2xl capitalize">{user?.username || "User"}</p>
                     <p className="text-xs text-gray-300 text-center">{user?.bio}</p>
                 </div>

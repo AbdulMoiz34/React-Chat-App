@@ -22,11 +22,11 @@ const ChatBox = ({ user, lastMessage, chatId, isSeen, handleSelect, isTyping }: 
         <div
             onClick={() => handleSelect(chatId, user)}
             className={`relative flex items-center gap-4 cursor-pointer py-3 px-3 border-b border-[#3e86cea7] hover:bg-[#03060981] transition-colors ${!isSeen ? "bg-[#0059b8be]" : ""} ${isCurrentChat ? "bg-[#03060981]" : ""}`}>
-            <div className="w-8 h-8">
+            <div className="w-9 h-9 rounded-full">
                 <img
                     src={img}
                     alt={user?.username}
-                    className={`rounded-full ${isCurrentChat ? "border border-[#3e86cea7]" : ""}`}
+                    className={`object-cover rounded-full w-full h-full ${isCurrentChat ? "border-[1.5px] border-white" : ""}`}
                 />
             </div>
 
