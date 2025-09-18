@@ -29,7 +29,8 @@ const uploadImgOnCloudinary = async (file: File) => {
 
         return res.data.secure_url;
     } catch (err) {
-        throw new Error("something went wrong");
+        const error = err as Error;
+        throw new Error(error.message || "something went wrong.");
     }
 }
 

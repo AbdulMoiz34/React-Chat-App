@@ -94,7 +94,7 @@ const Profile: React.FC = () => {
             setFile(null);
         } catch (err) {
             const error = err as Error;
-            showMessage({ type: "error", content: error.message || "something went wrong." });
+            showMessage({ type: "error", content: error.message });
         } finally {
             setIsUploading(false);
         }
@@ -121,7 +121,7 @@ const Profile: React.FC = () => {
                 </Tooltip>
                 <div className="flex flex-col items-center mb-7">
                     <div className="relative">
-                        <img src={avatar} alt="User Avatar"
+                        <img src={file ? URL.createObjectURL(file as File) as string : avatar} alt="User Avatar"
                             className="w-28 h-28 rounded-full object-cover  mb-4 border-4 border-blue-400 shadow-lg" />
                         <div className="img-edit-box absolute bottom-5 right-0">
                             <Button shape="circle" onClick={() => imgRef.current?.click()} disabled={file ? true : false}>
