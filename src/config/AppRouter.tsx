@@ -14,7 +14,6 @@ const AppRouter = () => {
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             fetchUserInfo(user?.uid as string);
-            console.log(user?.uid);
         })
     }, []);
 
